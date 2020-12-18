@@ -5,6 +5,11 @@ NO APIs are requierd.
 
 The length of source code is only 32 lines, but the example has a size of 29MB.  
 
+What can it do?
+
+[![](examples/thumbnail.png)](https://www.youtube.com/watch?v=Tx_IWvIplPU)
+
+
 ## Install `pymolPy3`
 
 `pip install pymolPy3 --user`
