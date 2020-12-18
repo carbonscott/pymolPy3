@@ -1,47 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-''' Visualize the aligned rhodopsin structures based on the rigid framework
-    specified in `fwk.dat`
-
-    The chains to align are specified in `chains.comp.dat`.  
-
-    PDBs files are save under `pdb_vr` directory.  
+''' Align a list of molecules using `super` command in PyMol.  The first item 
+    in the list is considered as the reference.  
 '''
 
 import pymolPy3
+import pyrotein as pr
 import os
-
-def read_file(file, numerical = False):
-    '''Return all lines in the user supplied parameter file without comments.
-    '''
-    lines = []
-    with open(file,'r') as fh:
-        for line in fh.readlines():
-            # Separate entries by spaces and remove commented lines...
-            words = line.replace('#', ' # ').split()
-
-            # Omit any thing coming after the pound sign in a line...
-            if "#" in words: words = words[  : words.index("#")]
-
-            # Save non-empty line...
-            if numerical: words = [ float(word) for word in words ]
-            if len(words) > 0: lines.append(words)
-
-    return lines
 
 # Specify chains to process...
 fl_chain = "chains.comp.dat"
-lines    = read_file(fl_chain)
+lines    = pr.utils.read_file(fl_chain)
 drc      = "pdb_vr"
+
+# Define atoms used for distance matrix analysis...
+peptide = ["N", "CA", "C", "O"]
 
 # Specify the range of atoms from rhodopsin...
 nterm = 1
 cterm = 348
+len_atoms_peptide = (cterm - nterm + 1) * len(peptide)
 
 # Specify the rigid framework...
 fl_fwk     = 'fwk.dat'
-fwk        = read_file(fl_fwk)
+fwk        = pr.utils.read_file(fl_fwk)
 fwk_select = ' or '.join( [ f"(resi {'-'.join(i)})" for i in fwk ] )
 
 # Start pymol
@@ -75,6 +58,8 @@ pm(f"select fwk, all and ({fwk_select})")
 pm(f"disable %fwk")
 
 
+
+
 # Customization
 # Set view...
 pm("set_view (\\")
@@ -86,15 +71,15 @@ pm("    58.718177795 ,    8.645618439,   -0.894862056,\\")
 pm("  -1408.164916992, 1895.492553711,  -20.000000000  )")
 
 # Set the lighting...
-pm("set 'ambient'           , 0.05")
-pm("set 'direct'            , 0.2" )
-pm("set 'spec_direct'       , 0"   )
-pm("set 'shininess'         , 10." )
-pm("set 'reflect'           , 0.5" )
-pm("set 'spec_count'        , -1"  )
-pm("set 'spec_reflect'      , -1." )
-pm("set 'specular'          , 1"   )
-pm("set 'specular_intensity', 0.5" )
+pm("set ambient           , 0.05")
+pm("set direct            , 0.2" )
+pm("set spec_direct       , 0"   )
+pm("set shininess         , 10." )
+pm("set reflect           , 0.5" )
+pm("set spec_count        , -1"  )
+pm("set spec_reflect      , -1." )
+pm("set specular          , 1"   )
+pm("set specular_intensity, 0.5" )
 
 # Hide the non-rhodopsin region...
 pm(f"hide cartoon, (not resi {nterm}-{cterm})")
