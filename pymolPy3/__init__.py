@@ -7,7 +7,7 @@ __all__ = [
             "pymolPy3",
           ]
 
-version = "0.1"
+version = "0.1.2"
 
 print("""\
 
