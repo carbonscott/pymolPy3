@@ -3,6 +3,8 @@
 The package enables the use of PyMOL commands directly in Python 3 scripts.
 NO APIs are requierd.  
 
+The length of source code is only 32 lines, but the example has a size of 29MB.  
+
 ## Install `pymolPy3`
 
 `pip install pymolPy3 --user`
