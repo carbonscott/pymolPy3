@@ -12,7 +12,8 @@ What can it do?
 
 ## Install `pymolPy3`
 
-`pip install pymolPy3 --user`
+`pip install pymolPy3 --user` or `pip install
+git+https://github.com/carbonscott/pymolPy3 --upgrade --user`
 
 ## Basic usage
 
