@@ -8,8 +8,3 @@ __all__ = [
           ]
 
 version = "0.1.2"
-
-print("""\
-
-Welcome to pymolPy3 -- version {VERSION}""".format( VERSION = version ) )
-print()
