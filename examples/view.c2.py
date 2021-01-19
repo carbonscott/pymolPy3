@@ -57,7 +57,7 @@ color_clusters = [ str(i) for i in range(disp_range[0],disp_range[1] + 1) ]
 
 
 
-# [[[ cluster 1 ]]]
+# [[[ cluster 1 -- active ]]]
 # Go through each structure
 custom_clusters = [25, 28, 29, 30, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
          46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62,
@@ -85,18 +85,25 @@ for i in custom_clusters[:]:
 pm(f"select cluster1, ({' or '.join(entries)}) and (resi {nterm}-{cterm})")
 pm(f"select cluster_active, %cluster1 and resi {'+'.join(color_clusters)}")
 pm(f"select ret_active, ({' or '.join(entries)}) and resn ret")
+pm(f"select hoh_active, ({' or '.join(entries)}) and resn hoh")
 pm(f"disable %cluster1")
 pm(f"disable %cluster_active")
 pm(f"disable %ret_active")
+pm(f"disable %hoh_active")
 
-# The appearance of cluster1
-# Show cartoon and custom it...
+# The appearance of TMs in cluster1...
+# Cartoon of TMs
 pm(f"hide cartoon, %cluster1")
 pm(f"set cartoon_color, white, %cluster1")
 
-# Set ribbon color...
-## pm(f"show ribbon, %cluster1")
+# Ribbon of TMs
+pm(f"show ribbon, %cluster1")
 pm(f"set ribbon_color, white, %cluster1")
+
+# Set the water representation...
+pm(f"hide everything, %hoh_active")
+pm(f"show sphere, %hoh_active")
+pm(f"set sphere_color, {custom_color['active']}, %hoh_active")
 
 # Color specific region to inactive color...
 pm(f"set ribbon_color, {custom_color['active']}, %cluster1 and resi {'+'.join(color_clusters)}")
@@ -106,7 +113,7 @@ pm(f"set stick_color, {custom_color['active']}, %ret_active and resn ret")
 
 
 
-# [[[ cluster 2 ]]]
+# [[[ cluster 2 -- inactive ]]]
 custom_clusters = [0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
          17, 18, 19, 20, 21, 22, 23, 24, 26, 27, 31, 32, 66, 67]
 
@@ -125,22 +132,29 @@ for i in custom_clusters[:]:
 pm(f"select cluster2, ({' or '.join(entries)}) and (resi {nterm}-{cterm})")
 pm(f"select cluster_inactive, %cluster2 and resi {'+'.join(color_clusters)}")
 pm(f"select ret_inactive, ({' or '.join(entries)}) and resn ret")
+pm(f"select hoh_inactive, ({' or '.join(entries)}) and resn hoh")
 pm(f"disable %cluster2")
 pm(f"disable %cluster_inactive")
 pm(f"disable %ret_inactive")
+pm(f"disable %hoh_inactive")
 
 pm(f"select cluster_gray, (%cluster1 or %cluster2) and not (%cluster_active or %cluster_inactive)")
 pm(f"disable %cluster_gray")
 
 
 # The appearance of cluster2
-# Show cartoon and custom it...
+# Cartoon of TMs
 pm(f"hide cartoon, %cluster2")
 pm(f"set cartoon_color, white, %cluster2")
 
-# Set ribbon color...
-## pm(f"show ribbon, %cluster2")
+# Ribbon of TMs
+pm(f"show ribbon, %cluster2")
 pm(f"set ribbon_color, white, %cluster2")
+
+# Set the water representation...
+pm(f"hide everything, %hoh_inactive")
+pm(f"show sphere, %hoh_inactive")
+pm(f"set sphere_color, {custom_color['inactive']}, %hoh_inactive")
 
 # Color specific region to inactive color...
 pm(f"set ribbon_color, {custom_color['inactive']}, %cluster2 and resi {'+'.join(color_clusters)}")
@@ -158,6 +172,9 @@ pm("    -0.618639231,   -0.710220516,   -0.335924447,\\")
 pm("    -0.000630774,    0.000504352, -155.440078735,\\")
 pm("    56.917179108,   13.737834930,    0.117419243,\\")
 pm("   113.265342712,  197.978042603,  -20.000000000 )")
+
+# Resize water sphere scale...
+pm(f"set sphere_scale, 0.25, %hoh_active or %hoh_inactive")
 
 # Hide the non-rhodopsin region...
 pm(f"hide cartoon, (not resi {nterm}-{cterm})")
@@ -190,5 +207,16 @@ pm(f"hide cartoon, (not resi {disp_range[0]}-{disp_range[1]}) and average")
 for k, v in TMs.items():
     pm(f"select {k}, resi {v[0]}-{v[1]} and (%average or %active or %inactive)")
     pm(f"disable {k}")
+
+# Set lighting to rubber...
+pm("set ambient, 0.05")
+pm("set direct, 0.2")
+pm("set spec_direct, 0")
+pm("set shininess, 10.")
+pm("set reflect, 0.5")
+pm("set spec_count, -1")
+pm("set spec_reflect, -1.")
+pm("set specular, 1")
+pm("set specular_intensity, 0.5")
 
 input("Press Enter to exit...")
